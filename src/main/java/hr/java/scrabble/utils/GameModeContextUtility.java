@@ -1,4 +1,4 @@
-package hr.java.scrabble.utilities;
+package hr.java.scrabble.utils;
 
 import hr.java.scrabble.game.GameConstants;
 import hr.java.scrabble.game.GameModeContext;
@@ -18,28 +18,23 @@ public class GameModeContextUtility {
     private GameModeContextUtility(){}
 
     public static void setupGameModeContext(GameHandler gameHandler, GameModeContext gameModeContext) {
-
-        if(GameModeContext.MULTIPLAYER_HOST_AND_CLIENT.equals(gameModeContext)) {
-            setupHostAndClient(gameHandler);
-        }
-
-        if(GameModeContext.MULTIPLAYER_CLIENT.equals(gameModeContext)) {
-            setupClient(gameHandler);
-        }
-
-        if(GameModeContext.SINGLEPLAYER.equals(gameModeContext)) {
-            setupSingleplayer(gameHandler);
-        }
-
-        //vrati na inicijalno stanje
-        if(gameModeContext == null){
+        if(gameModeContext == null)//vrati na inicijalno stanje
             setupInitial(gameHandler);
-        }
 
-        if(GameModeContext.GAMEPLAY_REPLAY.equals(gameModeContext)){
+        if(GameModeContext.MULTIPLAYER_HOST_AND_CLIENT.equals(gameModeContext))
+            setupHostAndClient(gameHandler);
+
+        if(GameModeContext.MULTIPLAYER_CLIENT.equals(gameModeContext))
+            setupClient(gameHandler);
+
+        if(GameModeContext.SINGLEPLAYER.equals(gameModeContext))
+            setupSingleplayer(gameHandler);
+
+        if(GameModeContext.GAMEPLAY_REPLAY.equals(gameModeContext))
             setupGameplayReplay(gameHandler);
-        }
 
+        if(GameModeContext.SINGLEPLAYER_GA.equals(gameModeContext))
+            setupSingleplayerGA(gameHandler);
     }
 
     private static void setupGameplayReplay(GameHandler gameHandler) {
@@ -66,7 +61,6 @@ public class GameModeContextUtility {
         gameHandler.putTilesFromPlayerStateToGrid();
         gameHandler.putTilesFromCenterGameStateToGrid();
         gameHandler.getPlayerActionsHandler().setSingleplayerActions();
-
 
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), keyFrame -> {
             Platform.runLater(new LastWordReader(gameHandler));
@@ -139,5 +133,16 @@ public class GameModeContextUtility {
         gameHandler.getLastWordText().setText("");
     }
 
+    private static void setupSingleplayerGA(GameHandler gameHandler) {
+        clearStatesAndScreen(gameHandler);
+
+        gameHandler.getTileBagState().setTileBag(TileBagUtility.generateNewTileBag());
+        gameHandler.getPlayerState().setPlayerBoardTiles(GameHandlerUtility.getRandomInitialPlayerTiles(gameHandler.getTileBagState()));
+        gameHandler.getGaPlayerState().setPlayerBoardTiles(GameHandlerUtility.getRandomInitialPlayerTiles(gameHandler.getTileBagState()));//ga
+
+        gameHandler.putTilesFromPlayerStateToGrid();
+        gameHandler.putTilesFromCenterGameStateToGrid();
+        gameHandler.getPlayerActionsHandler().setSingleplayerActions();
+    }
 
 }

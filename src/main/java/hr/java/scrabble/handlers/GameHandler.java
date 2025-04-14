@@ -7,7 +7,7 @@ import hr.java.scrabble.game.WordAndScore;
 import hr.java.scrabble.networking.client.Client;
 import hr.java.scrabble.networking.server.Server;
 import hr.java.scrabble.states.*;
-import hr.java.scrabble.utilities.*;
+import hr.java.scrabble.utils.*;
 import hr.java.scrabble.validations.MoveValidation;
 import hr.java.scrabble.word.WordSaver;
 import javafx.scene.control.MenuBar;
@@ -34,11 +34,13 @@ public class GameHandler implements GridPaneHandling {
 
     private final CenterBoardState centerBoardState;
     private final PlayerState playerState;
+    private final PlayerState gaPlayerState;
     private final TileBagState tileBagState;
 
     private MenuBarHandler menuBarHandler;
     private final PlayerActionsHandler playerActionsHandler;
     private final ChatHandler chatHandler;
+    private final GAHandler gaHandler;
 
     private GameplayHistory gameplayHistory;
     private GameModeContext gameModeContext;
@@ -59,11 +61,13 @@ public class GameHandler implements GridPaneHandling {
         centerBoardState = new CenterBoardState();
         tileBagState = new TileBagState();
         playerState = new PlayerState();
+        gaPlayerState = new PlayerState();
         gameplayHistory = new GameplayHistory();
 
         scoreText = new Text(GameConstants.SCORE + playerState.getPlayerScore().toString());
         scoreText.setFont(new Font(18));
-        this.playerActionsHandler = new PlayerActionsHandler(this);
+        playerActionsHandler = new PlayerActionsHandler(this);
+        gaHandler = new GAHandler(this);
 
         chatHandler = new ChatHandler(this);
         lastWordText = new Text();
@@ -118,6 +122,9 @@ public class GameHandler implements GridPaneHandling {
 
                 XMLFileSaveUtility.saveGameplayHistory(gameplayHistory);
             }
+
+            if(gameModeContext.equals(GameModeContext.SINGLEPLAYER_GA))
+                gaHandler.evolveAndShowBestChromosome();
 
             if(tileBagState.isTileBagEmpty() && !playerState.playerHasTiles()){
                 DialogUtility.showDialog("Game end", "Congratulations! You have won the game!");

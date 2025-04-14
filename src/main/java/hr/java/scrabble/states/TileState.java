@@ -7,35 +7,22 @@ import java.io.Serializable;
 
 @Setter
 @Getter
-public class TileState implements Serializable {
+public class TileState extends TileStateBase implements Serializable {
 
-    private Integer row;
-    private Integer col;
-    private String letter;
-    private Integer points;
     private boolean permanentlyLaid;
 
-
     public TileState(String letter, Integer row, Integer col, Integer points) {
-        this.letter = letter;
-        this.row = row;
-        this.col = col;
-        this.points = points;
+        super(row, col, letter, points);
     }
 
     public TileState(String letter, Integer points) {
-        this.letter = letter;
-        this.row = -1;//samo u tileBag
-        this.col = -1;//samo u tileBag
-        this.points = points;
+        super(-1, -1, letter, points);
     }
 
     public TileState getCopy(){
-        TileState tileState = new TileState(letter, row, col, points);
+        TileState tileState = new TileState(super.getLetter(), super.getRow(), super.getCol(), super.getPoints());
         tileState.setPermanentlyLaid(permanentlyLaid);
         return tileState;
     }
-
-    public TileState() {}
 
 }

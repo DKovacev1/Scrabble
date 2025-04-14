@@ -12,7 +12,8 @@ public enum ConfigurationKey {
     API_KEY("api.key"),
     API_URL("api.url"),
     X_API_KEY("x.api.key"),
-    DO_API_VALIDATIONS("do.api.validations");
+    DO_API_VALIDATIONS("do.api.validations"),
+    GA_POPULATION_SIZE("ga.population.size");
 
     private final String key;
 

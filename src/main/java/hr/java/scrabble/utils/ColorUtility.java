@@ -1,4 +1,4 @@
-package hr.java.scrabble.utilities;
+package hr.java.scrabble.utils;
 
 import javafx.scene.paint.Color;
 

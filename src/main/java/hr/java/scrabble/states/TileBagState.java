@@ -1,6 +1,6 @@
 package hr.java.scrabble.states;
 
-import hr.java.scrabble.utilities.TileBagUtility;
+import hr.java.scrabble.utils.TileBagUtility;
 import lombok.Getter;
 import lombok.Setter;
 

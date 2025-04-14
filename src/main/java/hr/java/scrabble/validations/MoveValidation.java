@@ -4,7 +4,7 @@ import hr.java.scrabble.components.TileComponent;
 import hr.java.scrabble.game.GameConstants;
 import hr.java.scrabble.game.WordAndScore;
 import hr.java.scrabble.states.TileState;
-import hr.java.scrabble.utilities.DialogUtility;
+import hr.java.scrabble.utils.DialogUtility;
 import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class MoveValidation {
     //ujedno zbraja bodove
     //predaje se referenca na WordScore objekt pa se u njega pohranjuju bodovi za dodanu rijec
     public static boolean validateMoveAndAssignWordScore(GridPane centerBoardGrid, Integer moveCount, WordAndScore wordAndScore){
-                List<TileState> tilesOnBoard = centerBoardGrid.getChildren().stream()
+        List<TileState> tilesOnBoard = centerBoardGrid.getChildren().stream()
                 .filter(TileComponent.class::isInstance)
                 .filter(node -> GridPane.getRowIndex(node) < NUM_OF_GRIDS
                         && GridPane.getColumnIndex(node) < NUM_OF_GRIDS)

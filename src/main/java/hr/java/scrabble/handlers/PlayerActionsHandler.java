@@ -1,7 +1,7 @@
 package hr.java.scrabble.handlers;
 
 import hr.java.scrabble.dto.PlayerInformationDTO;
-import hr.java.scrabble.utilities.DialogUtility;
+import hr.java.scrabble.utils.DialogUtility;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;

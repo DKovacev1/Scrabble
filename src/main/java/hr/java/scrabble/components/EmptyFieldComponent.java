@@ -2,7 +2,7 @@ package hr.java.scrabble.components;
 
 import hr.java.scrabble.game.FieldEnum;
 import hr.java.scrabble.game.GameConstants;
-import hr.java.scrabble.utilities.ColorUtility;
+import hr.java.scrabble.utils.ColorUtility;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;

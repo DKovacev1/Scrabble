@@ -1,4 +1,4 @@
-package hr.java.scrabble.utilities;
+package hr.java.scrabble.utils;
 
 import hr.java.scrabble.components.TileSwapComponent;
 import hr.java.scrabble.states.TileState;

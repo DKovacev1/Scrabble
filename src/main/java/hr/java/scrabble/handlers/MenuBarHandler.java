@@ -1,6 +1,6 @@
 package hr.java.scrabble.handlers;
 
-import hr.java.scrabble.utilities.MenuBarUtility;
+import hr.java.scrabble.utils.MenuBarUtility;
 import javafx.scene.control.MenuBar;
 import lombok.Getter;
 

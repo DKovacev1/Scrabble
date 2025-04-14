@@ -3,7 +3,7 @@ package hr.java.scrabble.validations;
 import hr.java.scrabble.game.GameConstants;
 import hr.java.scrabble.game.WordAndScore;
 import hr.java.scrabble.states.TileState;
-import hr.java.scrabble.utilities.TilesUtility;
+import hr.java.scrabble.utils.TilesUtility;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,6 +17,7 @@ public class HorizontalMoveValidation {
 
         newTilesOnBoard.sort(Comparator.comparing(TileState::getCol));
         Integer moveRow = newTilesOnBoard.getFirst().getRow();
+
 
         TileState mostLeftNewTileState = newTilesOnBoard.getFirst();
         TileState mostRightNewTileState = newTilesOnBoard.getLast();

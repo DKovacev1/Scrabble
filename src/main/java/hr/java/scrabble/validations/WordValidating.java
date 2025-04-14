@@ -2,7 +2,7 @@ package hr.java.scrabble.validations;
 
 import hr.java.scrabble.config.ConfigReader;
 import hr.java.scrabble.config.jndi.ConfigurationKey;
-import hr.java.scrabble.utilities.DialogUtility;
+import hr.java.scrabble.utils.DialogUtility;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.http.HttpEntity;

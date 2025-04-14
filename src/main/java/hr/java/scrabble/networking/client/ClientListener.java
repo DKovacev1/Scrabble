@@ -4,8 +4,8 @@ import hr.java.scrabble.dto.*;
 import hr.java.scrabble.handlers.GameHandler;
 import hr.java.scrabble.states.CenterBoardState;
 import hr.java.scrabble.states.TileBagState;
-import hr.java.scrabble.utilities.DialogUtility;
-import hr.java.scrabble.utilities.GameHandlerUtility;
+import hr.java.scrabble.utils.DialogUtility;
+import hr.java.scrabble.utils.GameHandlerUtility;
 import javafx.application.Platform;
 
 import java.io.EOFException;

@@ -56,8 +56,6 @@ public class PlayerState implements Serializable {
         return shuffeledPlayerTiles;
     }
 
-
-
     public void handlePlayerTilesSwap(List<TileState> tilesToSwap, TileBagState tileBagState) {
         List<Integer> oldColumnIndexes = tilesToSwap.stream()
                 .map(TileState::getCol)
@@ -93,12 +91,18 @@ public class PlayerState implements Serializable {
         this.playerBoardTiles = new ArrayList<>();
     }
 
-
-    public PlayerState getCopy(){
-        return new PlayerState(new ArrayList<>(this.playerBoardTiles));
-    }
-
     public boolean playerHasTiles() {
         return !playerBoardTiles.isEmpty();
     }
+
+    public PlayerState getCopy(){
+        List<TileState> copy = new ArrayList<>();
+        IntStream.range(0, playerBoardTiles.size())
+                .forEach(i -> {
+                    TileState tileState = playerBoardTiles.get(i).getCopy();
+                    copy.add(tileState);
+                });
+        return new PlayerState(copy);
+    }
+
 }

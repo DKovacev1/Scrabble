@@ -10,7 +10,7 @@ import hr.java.scrabble.config.jndi.ConfigurationKey;
 import hr.java.scrabble.networking.chat.ChatService;
 import hr.java.scrabble.states.CenterBoardState;
 import hr.java.scrabble.states.TileBagState;
-import hr.java.scrabble.utilities.DialogUtility;
+import hr.java.scrabble.utils.DialogUtility;
 import lombok.Getter;
 
 import java.io.IOException;

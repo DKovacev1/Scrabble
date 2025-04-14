@@ -1,4 +1,4 @@
-package hr.java.scrabble.utilities;
+package hr.java.scrabble.utils;
 
 import hr.java.scrabble.game.GameModeContext;
 import hr.java.scrabble.handlers.GameHandler;
@@ -36,7 +36,6 @@ public class MenuBarUtility {
         menu.getItems().add(menuItem1);
 
         menuItem1.setOnAction(e -> {
-            System.out.println("STOP PLAYING");
             if (gameHandler.getClient() != null && gameHandler.getClient().isConnected()) {
                 gameHandler.getClient().sendLeavingTheGame();
             }
@@ -59,6 +58,13 @@ public class MenuBarUtility {
             setMenuBarDefinitionToLeaveSingleplayerGame(menuBar, gameHandler);
         });
         menu.getItems().add(menuItem1);
+
+        MenuItem menuItemGA = new MenuItem("Singleplayer GA");
+        menuItemGA.setOnAction(e -> {
+            gameHandler.setGameContext(GameModeContext.SINGLEPLAYER_GA);
+            setMenuBarDefinitionToLeaveSingleplayerGame(menuBar, gameHandler);
+        });
+        menu.getItems().add(menuItemGA);
 
         menu.getItems().add(getMultiplayerMenu(menuBar, gameHandler));
 

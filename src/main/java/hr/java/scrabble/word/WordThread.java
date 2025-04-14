@@ -1,6 +1,6 @@
 package hr.java.scrabble.word;
 
-import hr.java.scrabble.utilities.FileUtility;
+import hr.java.scrabble.utils.FileUtility;
 
 public abstract class WordThread extends Thread{
 

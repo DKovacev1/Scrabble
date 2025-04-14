@@ -15,8 +15,8 @@ module hr.java.scrabble {
     opens hr.java.scrabble.components to javafx.fxml;
     exports hr.java.scrabble.controllers;
     opens hr.java.scrabble.controllers to javafx.fxml;
-    exports hr.java.scrabble.utilities;
-    opens hr.java.scrabble.utilities to javafx.fxml;
+    exports hr.java.scrabble.utils;
+    opens hr.java.scrabble.utils to javafx.fxml;
     exports hr.java.scrabble.handlers;
     opens hr.java.scrabble.handlers to javafx.fxml;
     exports hr.java.scrabble.states;
