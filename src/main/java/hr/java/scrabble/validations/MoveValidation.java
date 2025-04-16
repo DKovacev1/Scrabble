@@ -1,11 +1,9 @@
 package hr.java.scrabble.validations;
 
-import hr.java.scrabble.components.TileComponent;
 import hr.java.scrabble.game.GameConstants;
 import hr.java.scrabble.game.WordAndScore;
 import hr.java.scrabble.states.TileState;
 import hr.java.scrabble.utils.DialogUtility;
-import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,19 +17,7 @@ public class MoveValidation {
 
     //ujedno zbraja bodove
     //predaje se referenca na WordScore objekt pa se u njega pohranjuju bodovi za dodanu rijec
-    public static boolean validateMoveAndAssignWordScore(GridPane centerBoardGrid, Integer moveCount, WordAndScore wordAndScore){
-        List<TileState> tilesOnBoard = centerBoardGrid.getChildren().stream()
-                .filter(TileComponent.class::isInstance)
-                .filter(node -> GridPane.getRowIndex(node) < NUM_OF_GRIDS
-                        && GridPane.getColumnIndex(node) < NUM_OF_GRIDS)
-                .map(node -> {
-                    TileState tileState = ((TileComponent)node).getTileState().getCopy();
-                    tileState.setRow(GridPane.getRowIndex(node));
-                    tileState.setCol(GridPane.getColumnIndex(node));
-                    return tileState;
-                })
-                .toList();
-
+    public static boolean validateMoveAndAssignWordScore(List<TileState> tilesOnBoard, Integer moveCount, WordAndScore wordAndScore, boolean showDialog){
         List<TileState> oldTilesOnBoard = tilesOnBoard.stream()
                 .filter(TileState::isPermanentlyLaid)
                 .toList();
@@ -58,7 +44,6 @@ public class MoveValidation {
         else if(isHorizontalMove && isVerticalMove && newTilesOnBoard.size() == 1)//kada je samo jedna plocica stavljena
             isWordValidAndNotInterfering = SingleTileMoveValidation.validateSingleTileMoveAndAssignWordScore(tilesOnBoard, newTilesOnBoard.getFirst(), wordAndScore);
 
-
         System.out.println(GameConstants.DEBUG_LINE);
         System.out.println(GameConstants.DEBUG_LINE);
         System.out.println("PRVI POTEZ:             " + ((isAnyTileInCenter && moveCount == 0) || moveCount > 0));
@@ -67,13 +52,13 @@ public class MoveValidation {
         System.out.println("DOBRA I NE REMETI DRUGE:" + isWordValidAndNotInterfering);
         System.out.println(GameConstants.DEBUG_LINE);
 
-        if(!((isAnyTileInCenter && moveCount == 0) || moveCount > 0))
+        if(showDialog && !((isAnyTileInCenter && moveCount == 0) || moveCount > 0))
             DialogUtility.showDialog("Word validation", "First move must be placed in the center!");
 
-        if(!isMoveOrientationValid)
+        if(showDialog && !isMoveOrientationValid)
             DialogUtility.showDialog("Word validation", "Tiles can only be placed horizontally or vertically!");
 
-        if(!isMoveTouchingOldTiles)
+        if(showDialog && !isMoveTouchingOldTiles)
             DialogUtility.showDialog("Word validation", "At least one tile has to touch the old tiles!");
 
         return ((isAnyTileInCenter && moveCount == 0) || moveCount > 0) //prvi potez mora ici preko centra

@@ -102,18 +102,18 @@ public class HorizontalMoveValidation {
         scoringMap.keySet().stream()
                 .filter(tileState -> !tileState.isPermanentlyLaid())//premuim bodovi idu samo na NOVE plocie
                 .forEach(tileState -> {
-            switch (GameConstants.BOARD_SCORING[tileState.getRow()][tileState.getCol()].getScoringFormulaId()){
-                case 1 -> { //DL  utjece samo na pojedicu plocicu
-                    int oldScore = scoringMap.get(tileState);
-                    int newScore = oldScore * 2;
-                    scoringMap.put(tileState, newScore);
-                }
-                case 2 -> { //TL
-                    int oldScore = scoringMap.get(tileState);
-                    int newScore = oldScore * 3;
-                    scoringMap.put(tileState, newScore);
-                }
-            }
+                    switch (GameConstants.BOARD_SCORING[tileState.getRow()][tileState.getCol()].getScoringFormulaId()){
+                        case 1 -> { //DL  utjece samo na pojedicu plocicu
+                            int oldScore = scoringMap.get(tileState);
+                            int newScore = oldScore * 2;
+                            scoringMap.put(tileState, newScore);
+                        }
+                        case 2 -> { //TL
+                            int oldScore = scoringMap.get(tileState);
+                            int newScore = oldScore * 3;
+                            scoringMap.put(tileState, newScore);
+                        }
+                    }
         });
 
         //sumiranje svih vrijednosti bodova

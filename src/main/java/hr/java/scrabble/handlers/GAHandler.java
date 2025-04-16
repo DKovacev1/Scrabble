@@ -15,7 +15,7 @@ public class GAHandler {
     public void evolveAndShowBestChromosome() {
         Population<ChromosomeImpl> population = new PopulationImpl(gameHandler.getCenterBoardState().getCenterBoardTiles(), gameHandler.getGaPlayerState());
         population.createPopulation();
-
+        population.evolve();
 
 
         System.out.println(population);

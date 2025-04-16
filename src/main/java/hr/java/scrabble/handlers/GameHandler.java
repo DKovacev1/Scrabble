@@ -20,8 +20,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static hr.java.scrabble.game.GameConstants.WHOLE_GRID_NUM_OF_COLS;
-import static hr.java.scrabble.game.GameConstants.WHOLE_GRID_NUM_OF_ROWS;
+import static hr.java.scrabble.game.GameConstants.*;
 
 @Getter
 @Setter
@@ -93,7 +92,20 @@ public class GameHandler implements GridPaneHandling {
     @Override
     public void putTilesFromGridToCenterGameState() {
         WordAndScore wordAndScore = new WordAndScore();
-        if (MoveValidation.validateMoveAndAssignWordScore(centerBoardGrid, centerBoardState.getMoveCount(), wordAndScore)) {
+
+        List<TileState> tilesOnBoard = centerBoardGrid.getChildren().stream()
+                .filter(TileComponent.class::isInstance)
+                .filter(node -> GridPane.getRowIndex(node) < NUM_OF_GRIDS
+                        && GridPane.getColumnIndex(node) < NUM_OF_GRIDS)
+                .map(node -> {
+                    TileState tileState = ((TileComponent)node).getTileState().getCopy();
+                    tileState.setRow(GridPane.getRowIndex(node));
+                    tileState.setCol(GridPane.getColumnIndex(node));
+                    return tileState;
+                })
+                .toList();
+
+        if (MoveValidation.validateMoveAndAssignWordScore(tilesOnBoard, centerBoardState.getMoveCount(), wordAndScore, true)) {
             //----validacija je prosla----
             centerBoardState.incrementMoveCount();
             playerState.addToPlayerScore(wordAndScore.getScore());

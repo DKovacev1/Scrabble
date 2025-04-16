@@ -4,10 +4,7 @@ import hr.java.scrabble.ga.model.Chromosome;
 import hr.java.scrabble.ga.model.Direction;
 import hr.java.scrabble.ga.model.impl.ChromosomeImpl;
 import hr.java.scrabble.ga.model.impl.GeneImpl;
-import hr.java.scrabble.states.FreeCenterBoardState;
-import hr.java.scrabble.states.FreeCenterBoardTile;
-import hr.java.scrabble.states.PlayerState;
-import hr.java.scrabble.states.TileStateBase;
+import hr.java.scrabble.states.*;
 
 import java.util.Comparator;
 import java.util.List;
@@ -20,8 +17,8 @@ public class ChromosomeImplUtil {
 
     private ChromosomeImplUtil(){}
 
-    public static Chromosome<GeneImpl> generateRandomChromosome(FreeCenterBoardState freeCenterBoardState, PlayerState gaPlayerState){
-        Chromosome<GeneImpl> chromosome = new ChromosomeImpl();
+    public static Chromosome<GeneImpl> generateRandomChromosome(List<TileState> centerBoardTiles, FreeCenterBoardState freeCenterBoardState, PlayerState gaPlayerState){
+        Chromosome<GeneImpl> chromosome = new ChromosomeImpl(centerBoardTiles);
         Direction direction = getRandomDirection();
 
         freeCenterBoardState.getFreeCenterBoardTiles().stream()

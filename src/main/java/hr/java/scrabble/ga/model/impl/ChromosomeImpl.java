@@ -1,18 +1,45 @@
 package hr.java.scrabble.ga.model.impl;
 
 import hr.java.scrabble.ga.model.Chromosome;
-import hr.java.scrabble.ga.model.Direction;
+import hr.java.scrabble.game.WordAndScore;
+import hr.java.scrabble.states.TileState;
+import hr.java.scrabble.validations.MoveValidation;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChromosomeImpl implements Chromosome<GeneImpl> {
 
     private final List<GeneImpl> chromosome = new ArrayList<>();
+    private final List<TileState> centerBoardTiles;
+    private double fitness = 0;
+
+    public ChromosomeImpl(List<TileState> centerBoardTiles) {
+        this.centerBoardTiles = centerBoardTiles;
+    }
 
     @Override
-    public double calculateFitness() {
-        return 0;
+    public void calculateFitness() {
+        WordAndScore wordAndScore = new WordAndScore();
+        List<TileState> tilesOnBoard = new ArrayList<>(centerBoardTiles);
+        tilesOnBoard.addAll(
+                chromosome.stream()
+                        .map(GeneImpl::getGene)
+                        .map(tileStateBase -> {
+                            TileState tileState = new TileState(tileStateBase.getLetter(), tileStateBase.getRow(), tileStateBase.getCol(), tileStateBase.getPoints());
+                            tileState.setPermanentlyLaid(false);//plocice kromosoma nisu fiksno postavljene
+                            return tileState;
+                        })
+                        .toList()
+        );
+
+        MoveValidation.validateMoveAndAssignWordScore(tilesOnBoard, 1, wordAndScore, false);
+        this.fitness = wordAndScore.getScore();
+    }
+
+    @Override
+    public double getFitness() {
+        return fitness;
     }
 
     @Override
@@ -28,20 +55,6 @@ public class ChromosomeImpl implements Chromosome<GeneImpl> {
     @Override
     public void mutate() {
 
-    }
-
-    public Optional<Direction> getChromosomeDirection(){
-        Optional<Direction> direction;
-        Set<Integer> rowIndexSet = chromosome.stream()
-                .map(gene -> gene.getGene().getRow())
-                .collect(Collectors.toSet());
-
-        if(rowIndexSet.size() == 1)
-            direction = Optional.of(Direction.ROW);
-        else
-            direction = Optional.of(Direction.COLUMN);
-
-        return direction;
     }
 
 }

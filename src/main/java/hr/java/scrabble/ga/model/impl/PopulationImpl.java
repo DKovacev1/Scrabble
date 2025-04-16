@@ -14,17 +14,24 @@ import java.util.List;
 public class PopulationImpl implements Population<ChromosomeImpl> {
 
     private final PlayerState gaPlayerState;
+    private final List<TileState> centerBoardTiles;
     private final FreeCenterBoardState freeCenterBoardState;
     private List<Chromosome<GeneImpl>> population = new ArrayList<>();
 
     public PopulationImpl(List<TileState> centerBoardTiles, PlayerState gaPlayerState) {
         this.gaPlayerState = gaPlayerState;
+        this.centerBoardTiles = centerBoardTiles;
         this.freeCenterBoardState = CenterBoardStateUtil.getFreeCenterBoardState(centerBoardTiles);
     }
 
     @Override
     public void createPopulation() {
-        this.population = PopulationImplUtil.generateRandomPopulation(freeCenterBoardState, gaPlayerState);
+        this.population = PopulationImplUtil.generateRandomPopulation(centerBoardTiles, freeCenterBoardState, gaPlayerState);
+    }
+
+    @Override
+    public void evolve() {
+
     }
 
     @Override
