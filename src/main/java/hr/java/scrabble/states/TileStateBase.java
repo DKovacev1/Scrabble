@@ -1,9 +1,6 @@
 package hr.java.scrabble.states;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -11,9 +8,14 @@ import java.io.Serializable;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(callSuper = true)
 public class TileStateBase implements Serializable {
     private Integer row;
     private Integer col;
     private String letter;
     private Integer points;
+
+    public TileStateBase getCopy(){
+        return new TileStateBase(this.getRow(), this.getCol(), this.getLetter(), this.getPoints());
+    }
 }

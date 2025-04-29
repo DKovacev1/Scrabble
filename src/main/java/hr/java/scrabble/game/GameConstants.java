@@ -23,7 +23,6 @@ public class GameConstants {
 
     public static final String EMPTY_STRING = "\u200E\u200E";
     public static final String SCORE = "    Score: ";
-    public static final boolean IS_GAME_SIMPLIFIED = true;
 
     public static final FieldEnum[][] BOARD_SCORING = {
             {TW, EMPTY, EMPTY, DL, EMPTY, EMPTY, EMPTY, TW, EMPTY, EMPTY, EMPTY, DL, EMPTY, EMPTY, TW},
@@ -68,5 +67,7 @@ public class GameConstants {
 
     public static final String DOCUMENTATION_PATH_AND_FILE = "documentation/documentation.html";
     public static final String JAVA_FILE_PATH = "src/main/java";
+
+    public static final int GA_MAX_ATTEMPTS = 5;
 
 }

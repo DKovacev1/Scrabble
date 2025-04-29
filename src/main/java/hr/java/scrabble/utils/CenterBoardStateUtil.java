@@ -18,7 +18,7 @@ public class CenterBoardStateUtil {
                 int finalCol = col;
 
                 boolean isSlotFree = centerBoardTiles.stream()
-                        .noneMatch(tileState -> tileState.getCol().equals(finalRow) && tileState.getCol().equals(finalCol));
+                        .noneMatch(tileState -> tileState.getRow().equals(finalRow) && tileState.getCol().equals(finalCol));
 
                 if(isSlotFree){
                     FreeCenterBoardTile freeCenterBoardTile = new FreeCenterBoardTile();
@@ -29,6 +29,9 @@ public class CenterBoardStateUtil {
             }
         }
 
+        //System.out.println(centerBoardTiles);
+        //System.out.println("----");
+        //System.out.println(freeCenterBoardState);
         return freeCenterBoardState;
     }
 

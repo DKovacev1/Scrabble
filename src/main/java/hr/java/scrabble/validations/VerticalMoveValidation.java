@@ -4,16 +4,18 @@ import hr.java.scrabble.game.GameConstants;
 import hr.java.scrabble.game.WordAndScore;
 import hr.java.scrabble.states.TileState;
 import hr.java.scrabble.utils.TilesUtility;
+import lombok.RequiredArgsConstructor;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class VerticalMoveValidation {
 
-    private VerticalMoveValidation(){}
+    private final WordValidation wordValidation;
 
     //boduju se samo plocice u stupcu, za retke se radi jedino validacija
-    public static boolean validateVerticalMoveAndAssignWordScore(List<TileState> tilesOnBoard, List<TileState> newTilesOnBoard, WordAndScore wordAndScore) {
+    public boolean validateVerticalMoveAndAssignWordScore(List<TileState> tilesOnBoard, List<TileState> newTilesOnBoard, WordAndScore wordAndScore) {
         newTilesOnBoard.sort(Comparator.comparing(TileState::getRow));//sortiraj po indeksu retka
         Integer moveCol = newTilesOnBoard.getFirst().getCol();
 
@@ -44,8 +46,8 @@ public class VerticalMoveValidation {
                 .map(TileState::getLetter)
                 .collect(Collectors.joining());
 
-        System.out.println("vertical word: " + word);
-        if (!WordValidating.isWordValid(word))
+        //System.out.println("vertical word: " + word);
+        if (!wordValidation.isWordValid(word))
             return false;//rijec se ne nalazi u rijecniku
 
         wordAndScore.setWord(word);
@@ -77,8 +79,8 @@ public class VerticalMoveValidation {
                         .map(TileState::getLetter)
                         .collect(Collectors.joining());
 
-                System.out.println("rowWord: " + rowWord);
-                if (!WordValidating.isWordValid(rowWord))
+                //System.out.println("rowWord: " + rowWord);
+                if (!wordValidation.isWordValid(rowWord) && rowWord.length() > 1)
                     return false;//rijec se ne nalazi u rijecniku
 
                 //dodavanje bodova za slova koja se ponavljaju u rijecima za retke

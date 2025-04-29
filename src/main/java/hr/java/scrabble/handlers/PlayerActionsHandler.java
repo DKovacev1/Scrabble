@@ -1,7 +1,7 @@
 package hr.java.scrabble.handlers;
 
 import hr.java.scrabble.dto.PlayerInformationDTO;
-import hr.java.scrabble.utils.DialogUtility;
+import hr.java.scrabble.utils.BasicDialogUtility;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
@@ -50,14 +50,15 @@ public class PlayerActionsHandler extends HBox {
         super.getChildren().removeAll(super.getChildren());
         Button readyButton = new Button("Ready");
         readyButton.setOnAction(actionEvent -> {
-            String playerName = DialogUtility.getPlayerData();
+            String playerName = BasicDialogUtility.getPlayerData();
             PlayerInformationDTO playerInformationDTO = new PlayerInformationDTO(playerName);
 
             gameHandler.getClient().sendPlayerInformation(playerInformationDTO);
             super.getChildren().removeAll(super.getChildren());
             super.getChildren().add(new Text("Waiting until all players are ready."));
 
-            gameHandler.getChatHandler().buildNewChatComponent();
+            gameHandler.getSideBarHandler().addTileBagComponent();
+            gameHandler.getSideBarHandler().addChatComponent();
         });
 
         super.getChildren().add(readyButton);

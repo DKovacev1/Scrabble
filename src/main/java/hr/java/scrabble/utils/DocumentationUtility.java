@@ -41,7 +41,7 @@ public class DocumentationUtility {
                         String className = path.toString().replace("src\\main\\java\\", "");
                         className = className.replace("\\", ".");
                         className = className.substring(0, className.length() - 5);
-                        System.out.println(className);
+                        //System.out.println(className);
                         try {
                             Class<?> aClass = Class.forName(className);
                             documentBuilder.append(getDataForClass(aClass));

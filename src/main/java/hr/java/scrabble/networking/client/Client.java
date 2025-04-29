@@ -10,7 +10,7 @@ import hr.java.scrabble.config.jndi.ConfigurationKey;
 import hr.java.scrabble.networking.chat.ChatService;
 import hr.java.scrabble.states.CenterBoardState;
 import hr.java.scrabble.states.TileBagState;
-import hr.java.scrabble.utils.DialogUtility;
+import hr.java.scrabble.utils.BasicDialogUtility;
 import lombok.Getter;
 
 import java.io.IOException;
@@ -54,12 +54,12 @@ public class Client{
             chatService = (ChatService) registry.lookup(ChatService.REMOTE_OBJECT_NAME);
 
         } catch (RemoteException | NotBoundException e) {
-            DialogUtility.showDialog("Connection error", "Server not found!");
+            BasicDialogUtility.showDialog("Connection error", "Server not found!");
             e.printStackTrace();
         }
         catch (ConnectException e){
             e.printStackTrace();
-            DialogUtility.showDialog("Connection error", "Server not found!");
+            BasicDialogUtility.showDialog("Connection error", "Server not found!");
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -70,7 +70,7 @@ public class Client{
         try{
             objectOutputStream.writeObject(new CenterBoardStateAndTileBagStateDTO(centerBoardState, tileBagState));
             objectOutputStream.reset();
-            System.out.println("KLIJENT JE POSLAO: " + centerBoardState);
+            //System.out.println("KLIJENT JE POSLAO: " + centerBoardState);
         }catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -81,7 +81,7 @@ public class Client{
         try{
             objectOutputStream.writeObject(playerInformationDTO);
             objectOutputStream.reset();
-            System.out.println("KLIJENT JE POSLAO: " + playerInformationDTO);
+            //System.out.println("KLIJENT JE POSLAO: " + playerInformationDTO);
         }catch (IOException e) {
             throw new RuntimeException(e);
         }

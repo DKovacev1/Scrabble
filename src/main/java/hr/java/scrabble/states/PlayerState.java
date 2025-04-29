@@ -1,6 +1,7 @@
 package hr.java.scrabble.states;
 
 import hr.java.scrabble.game.GameConstants;
+import hr.java.scrabble.utils.BasicDialogUtility;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -57,33 +58,37 @@ public class PlayerState implements Serializable {
     }
 
     public void handlePlayerTilesSwap(List<TileState> tilesToSwap, TileBagState tileBagState) {
-        List<Integer> oldColumnIndexes = tilesToSwap.stream()
-                .map(TileState::getCol)
-                .toList();
+        if(!tileBagState.isTileBagEmpty() && tileBagState.canTilesBeSwapped(tilesToSwap.size())) {
+            List<Integer> oldColumnIndexes = tilesToSwap.stream()
+                    .map(TileState::getCol)
+                    .toList();
 
-        tilesToSwap.forEach(tileState -> {
-            tileState.setRow(-1);//takvi podaci se nalaze u tileBagState-u
-            tileState.setCol(-1);
-        });
+            tilesToSwap.forEach(tileState -> {
+                tileState.setRow(-1);//takvi podaci se nalaze u tileBagState-u
+                tileState.setCol(-1);
+            });
 
-        //makni plocice koje treba maknuti
-        playerBoardTiles.removeAll(tilesToSwap);
+            //makni plocice koje treba maknuti
+            playerBoardTiles.removeAll(tilesToSwap);
 
-        //izvuci nove
-        List<TileState> newlyTakenTiles = tileBagState.getRandomTiles(tilesToSwap.size());
+            //izvuci nove
+            List<TileState> newlyTakenTiles = tileBagState.getRandomTiles(tilesToSwap.size());
 
-        //nove dodati u player state, postaviti im redke i stupce
-        int newlyTakenTilesCounter = 0;
-        for(int i = playerBoardTiles.size(); i < GameConstants.MAX_NUM_OF_TILES_FOR_PLAYER; i++){
-            TileState tileState = newlyTakenTiles.get(newlyTakenTilesCounter);
-            tileState.setRow(GameConstants.PLAYER_TILE_GRID_DATA_ROW_INDEX);
-            tileState.setCol(oldColumnIndexes.get(newlyTakenTilesCounter));
-            playerBoardTiles.add(tileState);
-            newlyTakenTilesCounter++;
+            //nove dodati u player state, postaviti im redke i stupce
+            int newlyTakenTilesCounter = 0;
+            for (int i = playerBoardTiles.size(); i < GameConstants.MAX_NUM_OF_TILES_FOR_PLAYER; i++) {
+                TileState tileState = newlyTakenTiles.get(newlyTakenTilesCounter);
+                tileState.setRow(GameConstants.PLAYER_TILE_GRID_DATA_ROW_INDEX);
+                tileState.setCol(oldColumnIndexes.get(newlyTakenTilesCounter));
+                playerBoardTiles.add(tileState);
+                newlyTakenTilesCounter++;
+            }
+
+            //stare vratiti u vrecicu
+            tileBagState.returnTilesToBag(tilesToSwap);
         }
-
-        //stare vratiti u vrecicu
-        tileBagState.returnTilesToBag(tilesToSwap);
+        else
+            BasicDialogUtility.showDialog("Swapping error", "Tiles can no longer be swapped");
     }
 
     public void reset(){

@@ -4,7 +4,8 @@ import hr.java.scrabble.dto.*;
 import hr.java.scrabble.handlers.GameHandler;
 import hr.java.scrabble.states.CenterBoardState;
 import hr.java.scrabble.states.TileBagState;
-import hr.java.scrabble.utils.DialogUtility;
+import hr.java.scrabble.states.TileState;
+import hr.java.scrabble.utils.BasicDialogUtility;
 import hr.java.scrabble.utils.GameHandlerUtility;
 import javafx.application.Platform;
 
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.List;
 
 public class ClientListener implements Runnable {
     private final GameHandler gameHandler;
@@ -33,22 +35,22 @@ public class ClientListener implements Runnable {
             while (listening) {
                 Object receivedObject = objectInputStream.readObject();
 
-                if (receivedObject instanceof MessageDTO messageDTO)
-                    Platform.runLater(() -> DialogUtility.showDialog("Server message", messageDTO.message()));
+                if (receivedObject instanceof MessageDTO(String message))
+                    Platform.runLater(() -> BasicDialogUtility.showDialog("Server message", message));
 
                 if (receivedObject instanceof InGameMultiplayerActionsDTO){
                     Platform.runLater(() -> gameHandler.getPlayerActionsHandler().setInGameMultiplayerActions());
                 }
 
-                if (receivedObject instanceof InitialTilesDTO initialTilesDTO) {
-                    gameHandler.getPlayerState().setPlayerBoardTiles(initialTilesDTO.initialTiles());
-                    Platform.runLater(() -> gameHandler.putTilesFromPlayerStateToGrid());
+                if (receivedObject instanceof InitialTilesDTO(List<TileState> initialTiles)) {
+                    gameHandler.getPlayerState().setPlayerBoardTiles(initialTiles);
+                    Platform.runLater(gameHandler::putTilesFromPlayerStateToGrid);
                 }
 
-                if(receivedObject instanceof YourTurnDTO yourTurnDTO) {
+                if(receivedObject instanceof YourTurnDTO(boolean isYourTurn)) {
                     Platform.runLater(() -> {
-                        gameHandler.getPlayerActionsHandler().setDisableForAllActions(!yourTurnDTO.isYourTurn());
-                        GameHandlerUtility.setDraggableForAllPlayerTiles(gameHandler, !yourTurnDTO.isYourTurn());
+                        gameHandler.getPlayerActionsHandler().setDisableForAllActions(!isYourTurn);
+                        GameHandlerUtility.setDraggableForPlayerTiles(gameHandler, !isYourTurn);
                     });
                 }
 
@@ -65,10 +67,10 @@ public class ClientListener implements Runnable {
                     gameHandler.getTileBagState().setTileBag(tileBagStateIn.getTileBag());
                 }
 
-                if (receivedObject instanceof WinnerAnnouncementDTO winnerAnnouncementDTO) {
-                    Platform.runLater(() -> DialogUtility.showDialog(
+                if (receivedObject instanceof WinnerAnnouncementDTO(String playerName)) {
+                    Platform.runLater(() -> BasicDialogUtility.showDialog(
                             "Game end",
-                            "Player " + winnerAnnouncementDTO.playerName() + " has won the game!")
+                            "Player " + playerName + " has won the game!")
                     );
                 }
 
@@ -99,7 +101,7 @@ public class ClientListener implements Runnable {
             e.printStackTrace();
         }
 
-        System.out.println("CLIENT STOPPED LISTENING");
+        //System.out.println("CLIENT STOPPED LISTENING");
     }
 
     public void stopListening() {

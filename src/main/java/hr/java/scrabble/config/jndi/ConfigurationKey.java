@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ConfigurationKey {
 
+    GAME_SIMPLIFIED("game.simplified"),
     HOST("host"),
     SERVER_PORT("server.port"),
     SERVER_RMI_PORT("server.rmi.port"),
@@ -13,7 +14,9 @@ public enum ConfigurationKey {
     API_URL("api.url"),
     X_API_KEY("x.api.key"),
     DO_API_VALIDATIONS("do.api.validations"),
-    GA_POPULATION_SIZE("ga.population.size");
+    GA_POPULATION_SIZE("ga.population.size"),
+    ELITISM_RATE("ga.elitism.rate"),
+    MUTATION_RATE("ga.mutation.rate");
 
     private final String key;
 

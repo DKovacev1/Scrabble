@@ -1,6 +1,7 @@
 package hr.java.scrabble.utils;
 
-import hr.java.scrabble.game.GameConstants;
+import hr.java.scrabble.config.ConfigReader;
+import hr.java.scrabble.config.jndi.ConfigurationKey;
 import hr.java.scrabble.states.TileState;
 
 import java.util.*;
@@ -13,7 +14,7 @@ public class TileBagUtility {
         //plocica, brojPlocica
         Map<TileState, Integer> tileBag = new HashMap<>();
 
-        if (!GameConstants.IS_GAME_SIMPLIFIED) {
+        if (!Boolean.parseBoolean(ConfigReader.getValue(ConfigurationKey.GAME_SIMPLIFIED))) {
             tileBag.put(new TileState("A", 1), 9);
             tileBag.put(new TileState("B", 3), 2);
             tileBag.put(new TileState("C", 3), 2);
@@ -47,10 +48,10 @@ public class TileBagUtility {
             tileBag.put(new TileState("C", 3), 3);
             tileBag.put(new TileState("D", 2), 3);
             tileBag.put(new TileState("E", 1), 3);
-            /*tileBag.put(new TileState("F", 4), 2);
+            tileBag.put(new TileState("F", 4), 2);
             tileBag.put(new TileState("G", 2), 2);
             tileBag.put(new TileState("H", 4), 2);
-            tileBag.put(new TileState("I", 1), 2);*/
+            tileBag.put(new TileState("I", 1), 2);
         }
 
         return tileBag;

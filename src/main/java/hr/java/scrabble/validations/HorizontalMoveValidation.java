@@ -4,16 +4,18 @@ import hr.java.scrabble.game.GameConstants;
 import hr.java.scrabble.game.WordAndScore;
 import hr.java.scrabble.states.TileState;
 import hr.java.scrabble.utils.TilesUtility;
+import lombok.RequiredArgsConstructor;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class HorizontalMoveValidation {
 
-    private HorizontalMoveValidation(){}
+    private final WordValidation wordValidation;
 
     //boduju se samo plocice u retku, za stupce se radi jedino validacija
-    public static boolean validateHorizontalMoveAndAssignWordScore(List<TileState> tilesOnBoard, List<TileState> newTilesOnBoard, WordAndScore wordAndScore) {
+    public boolean validateHorizontalMoveAndAssignWordScore(List<TileState> tilesOnBoard, List<TileState> newTilesOnBoard, WordAndScore wordAndScore) {
 
         newTilesOnBoard.sort(Comparator.comparing(TileState::getCol));
         Integer moveRow = newTilesOnBoard.getFirst().getRow();
@@ -45,8 +47,8 @@ public class HorizontalMoveValidation {
                 .map(TileState::getLetter)
                 .collect(Collectors.joining());
 
-        System.out.println("horizontal word: " + word);
-        if (!WordValidating.isWordValid(word))
+        //System.out.println("horizontal word: " + word);
+        if (!wordValidation.isWordValid(word))
             return false;//rijec se ne nalazi u rijecniku
 
         wordAndScore.setWord(word);
@@ -78,8 +80,8 @@ public class HorizontalMoveValidation {
                         .map(TileState::getLetter)
                         .collect(Collectors.joining());
 
-                System.out.println("columnWord: " + columnWord);
-                if (!WordValidating.isWordValid(columnWord))
+                //System.out.println("columnWord: " + columnWord);
+                if (!wordValidation.isWordValid(columnWord) && columnWord.length() > 1)
                     return false;//rijec se ne nalazi u rijecniku
 
                 columnTileStates.forEach(tileState -> scoringMap.put(tileState, tileState.getPoints()));//bodovanje ide na kompletnu novu rijec, ne samo slova koja su dodana

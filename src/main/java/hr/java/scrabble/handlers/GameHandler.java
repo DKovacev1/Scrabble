@@ -8,6 +8,7 @@ import hr.java.scrabble.networking.client.Client;
 import hr.java.scrabble.networking.server.Server;
 import hr.java.scrabble.states.*;
 import hr.java.scrabble.utils.*;
+import hr.java.scrabble.validations.DictionaryWordValidation;
 import hr.java.scrabble.validations.MoveValidation;
 import hr.java.scrabble.word.WordSaver;
 import javafx.scene.control.MenuBar;
@@ -24,7 +25,7 @@ import static hr.java.scrabble.game.GameConstants.*;
 
 @Getter
 @Setter
-public class GameHandler implements GridPaneHandling {
+public class GameHandler {
 
     private final GridPane offsetGrid;//koristi se za racunanje tocne pozicije kod drag and dropa
     private final GridPane centerBoardGrid;//glavna ploca
@@ -38,7 +39,7 @@ public class GameHandler implements GridPaneHandling {
 
     private MenuBarHandler menuBarHandler;
     private final PlayerActionsHandler playerActionsHandler;
-    private final ChatHandler chatHandler;
+    private final SideBarHandler sideBarHandler;
     private final GAHandler gaHandler;
 
     private GameplayHistory gameplayHistory;
@@ -46,6 +47,8 @@ public class GameHandler implements GridPaneHandling {
 
     private Client client;
     private Server server;
+
+    private final MoveValidation moveValidation;
 
     public GameHandler() {
         offsetGrid = new GridPane();
@@ -68,31 +71,27 @@ public class GameHandler implements GridPaneHandling {
         playerActionsHandler = new PlayerActionsHandler(this);
         gaHandler = new GAHandler(this);
 
-        chatHandler = new ChatHandler(this);
+        sideBarHandler = new SideBarHandler(this);
         lastWordText = new Text();
+        moveValidation = new MoveValidation(new DictionaryWordValidation());
     }
 
-    @Override
     public void putTilesFromPlayerStateToGrid() {
         GameHandlerUtility.fillEmptyPlayerBoard(this.centerBoardGrid);
         GameHandlerUtility.addTilesToGrid(playerState.getPlayerBoardTiles(), this);
     }
 
-    @Override
     public void putTilesFromCenterGameStateToGrid() {
         GameHandlerUtility.fillEmptyGameBoard(this.centerBoardGrid);
         GameHandlerUtility.addTilesToGrid(centerBoardState.getCenterBoardTiles(), this);
     }
 
-    @Override
     public void putTilesFromGridToPlayerState() {
         GameHandlerUtility.putTilesFromGridToPlayerState(playerState, centerBoardGrid);
     }
 
-    @Override
     public void putTilesFromGridToCenterGameState() {
         WordAndScore wordAndScore = new WordAndScore();
-
         List<TileState> tilesOnBoard = centerBoardGrid.getChildren().stream()
                 .filter(TileComponent.class::isInstance)
                 .filter(node -> GridPane.getRowIndex(node) < NUM_OF_GRIDS
@@ -105,7 +104,7 @@ public class GameHandler implements GridPaneHandling {
                 })
                 .toList();
 
-        if (MoveValidation.validateMoveAndAssignWordScore(tilesOnBoard, centerBoardState.getMoveCount(), wordAndScore, true)) {
+        if (moveValidation.validateMoveAndAssignWordScore(tilesOnBoard, centerBoardState.getMoveCount(), wordAndScore, true)) {
             //----validacija je prosla----
             centerBoardState.incrementMoveCount();
             playerState.addToPlayerScore(wordAndScore.getScore());
@@ -115,6 +114,9 @@ public class GameHandler implements GridPaneHandling {
             if(gameModeContext.equals(GameModeContext.MULTIPLAYER_HOST_AND_CLIENT) || gameModeContext.equals(GameModeContext.MULTIPLAYER_CLIENT)){
                 client.sendCenterBoardStateAndTileBag(centerBoardState, tileBagState);
             }
+
+            if(gameModeContext.equals(GameModeContext.SINGLEPLAYER_GA))
+                gaHandler.handleGAEvolution();
 
             putTilesFromCenterGameStateToGrid();
             putTilesFromPlayerStateToGrid();
@@ -135,23 +137,26 @@ public class GameHandler implements GridPaneHandling {
                 XMLFileSaveUtility.saveGameplayHistory(gameplayHistory);
             }
 
-            if(gameModeContext.equals(GameModeContext.SINGLEPLAYER_GA))
-                gaHandler.evolveAndShowBestChromosome();
-
-            if(tileBagState.isTileBagEmpty() && !playerState.playerHasTiles()){
-                DialogUtility.showDialog("Game end", "Congratulations! You have won the game!");
-                if(client != null && client.isConnected())
-                    client.sendIWon();
+            if(tileBagState.isTileBagEmpty()){
+                if(!playerState.playerHasTiles()){
+                    BasicDialogUtility.showDialog("Game end", "Congratulations! You have won the game!");
+                    if(client != null && client.isConnected())
+                        client.sendIWon();
+                    return;
+                }
+                if(!gaPlayerState.playerHasTiles()){
+                    BasicDialogUtility.showDialog("Game end", "Genetic algorithm has won the game!");
+                }
             }
-
-        } else {
-            //vrati stanje prije nego su se plocice dodale na plocu
+        }
+        else{
             putTilesFromCenterGameStateToGrid();
             putTilesFromPlayerStateToGrid();
         }
+
+        sideBarHandler.addTileBagComponent();
     }
 
-    @Override
     public boolean tileExistsInWholeGrid(Integer row, Integer col) {
         return centerBoardGrid.getChildren().stream()
                 .filter(TileComponent.class::isInstance)
@@ -170,10 +175,13 @@ public class GameHandler implements GridPaneHandling {
     }
 
     public void swapPlayerTiles() {
-        List<TileState> tilesToSwap = new ArrayList<>(DialogUtility.showSwapTilesDialog(GameHandlerUtility.getPlayerTilesFromGrid(centerBoardGrid)));
+        putTilesFromCenterGameStateToGrid();
+        putTilesFromPlayerStateToGrid();
+        List<TileState> tilesToSwap = new ArrayList<>(BasicDialogUtility.showSwapTilesDialog(GameHandlerUtility.getPlayerTilesFromGrid(centerBoardGrid)));
         if (!tilesToSwap.isEmpty()) {
             playerState.handlePlayerTilesSwap(tilesToSwap, tileBagState);
             putTilesFromPlayerStateToGrid();
+            sideBarHandler.addTileBagComponent();
         }
     }
 

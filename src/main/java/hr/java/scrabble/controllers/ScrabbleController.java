@@ -20,15 +20,14 @@ public class ScrabbleController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        gameHandler.setMenuBarHandler(menuBar);
+         gameHandler.setMenuBarHandler(menuBar);
 
         screenGridPane.add(gameHandler.getOffsetGrid(), 0, 0);
         screenGridPane.add(gameHandler.getLastWordText(), 1, 0);
         screenGridPane.add(gameHandler.getCenterBoardGrid(), 1, 1);
-        screenGridPane.add(gameHandler.getScoreText(), 2, 1);
+        screenGridPane.add(gameHandler.getScoreText(), 2, 0);
         screenGridPane.add(gameHandler.getPlayerActionsHandler(), 1, 2);
-        screenGridPane.add(gameHandler.getChatHandler().getChatComponent(), 1, 3);
-
+        screenGridPane.add(gameHandler.getSideBarHandler().getSideBarComponent(), 2, 1);
     }
 
 }

@@ -44,10 +44,11 @@ public class FileUtility {
             objectInputStream = new ObjectInputStream(new FileInputStream(GameConstants.GAME_SAVE_PATH + GameConstants.TILE_BAG_FILE));
             TileBagState loadedTileBagState = (TileBagState) objectInputStream.readObject();
             tileBagState.setTileBag(loadedTileBagState.getTileBag());
+            tileBagState.setIdCounter(loadedTileBagState.getIdCounter());
 
             objectInputStream.close();
         } catch (FileNotFoundException e){
-            DialogUtility.showDialog("File error", "Game save not found. Try to save the game first.");
+            BasicDialogUtility.showDialog("File error", "Game save not found. Try to save the game first.");
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }

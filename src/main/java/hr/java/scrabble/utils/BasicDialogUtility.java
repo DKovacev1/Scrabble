@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-public class DialogUtility {
+public class BasicDialogUtility {
 
-    private DialogUtility(){}
+    private BasicDialogUtility(){}
 
     public static List<TileState> showSwapTilesDialog(List<TileState> playerTiles) {
         List<TileState> tilesToSwap = new ArrayList<>();
@@ -54,7 +54,7 @@ public class DialogUtility {
             if (buttonType == ButtonType.OK) {
                 // OK button was pressed, handle accordingly
                 tilesToSwap.addAll(swapTilesGridPane.getChildren().stream()
-                        .filter(node -> node instanceof TileSwapComponent)
+                        .filter(TileSwapComponent.class::isInstance)
                         .filter(node -> ((TileSwapComponent) node).isNeedToSwap())
                         .map(node -> ((TileSwapComponent) node).getTileState())
                         .toList());

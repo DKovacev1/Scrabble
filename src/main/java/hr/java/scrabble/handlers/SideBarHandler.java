@@ -4,33 +4,56 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import lombok.Getter;
 
 import java.rmi.RemoteException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class ChatHandler {
+public class SideBarHandler {
 
     private final GameHandler gameHandler;
 
     @Getter
-    private VBox chatComponent = new VBox();
+    private VBox sideBarComponent;
 
     private TextArea chatArea;
     private TextField sendMessageField;
 
-    public ChatHandler(GameHandler gameHandler) {
+    public SideBarHandler(GameHandler gameHandler) {
         this.gameHandler = gameHandler;
+        sideBarComponent = new VBox();
+        sideBarComponent.setPadding(new Insets(20, 20, 20, 20));
     }
 
-    public void buildNewChatComponent(){
+    public void addTileBagComponent() {
+        sideBarComponent.getChildren().clear();
+
+        String tileBagText = "Tile Bag: " + gameHandler.getTileBagState().getTileBagSize() + "\n";
+        String groupedLetters = gameHandler.getTileBagState().getTileBag()
+                .entrySet().stream()
+                .sorted(Comparator.comparing(entry -> entry.getKey().getLetter()))
+                .map(entry -> (entry.getKey().getLetter()+ " ").repeat(entry.getValue()))
+                .collect(Collectors.joining("  "));
+
+        Text text = new Text(tileBagText + groupedLetters);
+        text.setFont(new Font(15));
+
+        sideBarComponent.getChildren().add(text);
+    }
+
+    public void addChatComponent(){
         Button sendButton;
         chatArea = new TextArea();
         chatArea.setEditable(false);
@@ -41,23 +64,24 @@ public class ChatHandler {
         sendButton = new Button("Send message");
         sendButton.setOnAction(this::sendChatMessage);
 
-        chatComponent.setSpacing(10);
-        chatComponent.getChildren().add(chatArea);//prvi redak
+        sideBarComponent.setSpacing(10);
+        sideBarComponent.getChildren().add(chatArea);//prvi redak
 
         HBox hBox = new HBox();
         hBox.setSpacing(10);
         hBox.getChildren().add(sendMessageField);
         hBox.getChildren().add(sendButton);
 
-        chatComponent.getChildren().add(hBox);//drugi redak
+        sideBarComponent.getChildren().add(hBox);//drugi redak
 
         //"listener"
         Timeline timeline = getTimeline();
         timeline.playFromStart();
     }
 
-    public void removeChatComponent(){
-        chatComponent.getChildren().removeAll(chatComponent.getChildren());
+    public void removeSideBarComponent(){
+        sideBarComponent.getChildren().removeAll(sideBarComponent.getChildren());
+        //updateTileBagComponent();
     }
 
     private Timeline getTimeline() {

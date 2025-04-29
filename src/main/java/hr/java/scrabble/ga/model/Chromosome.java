@@ -4,8 +4,9 @@ import java.util.List;
 
 public interface Chromosome<T extends Gene<?>> {
     void calculateFitness();
-    double getFitness();
+    int getFitness();
     List<T> getGenes();
     Chromosome<T> crossover(Chromosome<T> partner);
     void mutate();
+    Chromosome<T>  getCopy();
 }

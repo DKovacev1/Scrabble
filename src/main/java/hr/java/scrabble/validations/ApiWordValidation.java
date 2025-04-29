@@ -2,8 +2,9 @@ package hr.java.scrabble.validations;
 
 import hr.java.scrabble.config.ConfigReader;
 import hr.java.scrabble.config.jndi.ConfigurationKey;
-import hr.java.scrabble.utils.DialogUtility;
+import hr.java.scrabble.utils.BasicDialogUtility;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -15,13 +16,12 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-public class WordValidating {
+@NoArgsConstructor
+public class ApiWordValidation implements WordValidation {
 
-    private WordValidating(){}
-
-    public static boolean isWordValid(String word){
-
-        if(word.length() > 1 && Boolean.parseBoolean(ConfigReader.getValue(ConfigurationKey.DO_API_VALIDATIONS)) ){
+    @Override
+    public boolean isWordValid(String word) {
+        if (word.length() > 1 && Boolean.parseBoolean(ConfigReader.getValue(ConfigurationKey.DO_API_VALIDATIONS))) {
             HttpGet request = new HttpGet(ConfigReader.getValue(ConfigurationKey.API_URL) + word);
             request.addHeader(ConfigReader.getValue(ConfigurationKey.X_API_KEY), ConfigReader.getValue(ConfigurationKey.API_KEY));
 
@@ -46,14 +46,14 @@ public class WordValidating {
                     boolean valid = jsonObject.getBoolean("valid");
 
                     // Create ApiResponse object
-                    ApiResponse apiResponse = new ApiResponse(definition, word, valid);
+                    ApiWordValidation.ApiResponse apiResponse = new ApiResponse(definition, word, valid);
 
                     // Print ApiResponse object
-                    System.out.println("ApiResponse: " + apiResponse);
+                    //System.out.println("ApiResponse: " + apiResponse);
 
                     // You can return the ApiResponse object or extract required data from it
-                    if(!apiResponse.isValid()){
-                        DialogUtility.showDialog("Word validation error", "Word '" + word + "' is not valid!");
+                    if (!apiResponse.isValid()) {
+                        BasicDialogUtility.showDialog("Word validation error", "Word '" + word + "' is not valid!");
                         return false;
                     }
                     return true;
@@ -63,12 +63,12 @@ public class WordValidating {
                 e.printStackTrace();
             }
 
-        }
-        else
+        } else
             return true;
 
         return true;
     }
+
 
     @Setter
     @Getter

@@ -168,8 +168,8 @@ public class GameHandlerUtility {
                 .toList();
     }
 
-    public static void setDraggableForAllPlayerTiles(GameHandler gameHandler, boolean value) {
-        gameHandler.getPlayerState().getPlayerBoardTiles().forEach(tileState -> tileState.setPermanentlyLaid(value));
+    public static void setDraggableForPlayerTiles(GameHandler gameHandler, boolean permanentlyLaid) {
+        gameHandler.getPlayerState().getPlayerBoardTiles().forEach(tileState -> tileState.setPermanentlyLaid(permanentlyLaid));
         gameHandler.putTilesFromPlayerStateToGrid();
     }
 

@@ -62,7 +62,9 @@ public class MenuBarUtility {
         MenuItem menuItemGA = new MenuItem("Singleplayer GA");
         menuItemGA.setOnAction(e -> {
             gameHandler.setGameContext(GameModeContext.SINGLEPLAYER_GA);
-            setMenuBarDefinitionToLeaveSingleplayerGame(menuBar, gameHandler);
+            menuBar.getMenus().clear();
+            menuBar.getMenus().add(getLeaveMenu(menuBar, gameHandler));
+            menuBar.getMenus().add(getDocumentationMenu());
         });
         menu.getItems().add(menuItemGA);
 

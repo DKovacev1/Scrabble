@@ -66,7 +66,7 @@ public class Server implements Runnable{
 
                 Socket clientSocket;
                 try {
-                    System.out.println("SERVER ACCEPTING");
+                    //System.out.println("SERVER ACCEPTING");
                     clientSocket = server.accept();
                 } catch (SocketException e) {
                     //izadji iz loop-a, server je zatvoren
@@ -85,7 +85,7 @@ public class Server implements Runnable{
                     // Reject new client when the game is in progress
                     ObjectOutputStream objectOutputStream = new ObjectOutputStream(clientSocket.getOutputStream());
                     objectOutputStream.writeObject(new MessageDTO("Game is in progress!"));
-                    System.out.println("GAME IN PROGRESS");
+                    //System.out.println("GAME IN PROGRESS");
                     clientSocket.close();
                 }
             }
@@ -108,7 +108,7 @@ public class Server implements Runnable{
             }
         }
 
-        System.out.println("SERVER SHUT DOWN");
+        //System.out.println("SERVER SHUT DOWN");
     }
 
     public void stop() {

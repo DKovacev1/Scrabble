@@ -3,11 +3,11 @@ module hr.java.scrabble {
     requires javafx.fxml;
     requires org.apache.httpcomponents.httpclient;
     requires org.apache.httpcomponents.httpcore;
-    requires org.json;
     requires lombok;
     requires java.rmi;
     requires java.naming;
-    requires java.xml;
+    requires java.desktop;
+    requires org.json;
 
     opens hr.java.scrabble to javafx.fxml;
     exports hr.java.scrabble;

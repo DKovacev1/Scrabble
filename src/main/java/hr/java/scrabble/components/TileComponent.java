@@ -13,7 +13,7 @@ import javafx.scene.text.TextAlignment;
 
 import static hr.java.scrabble.game.GameConstants.TILE_STYLE;
 
-public class TileComponent extends HBox implements Draggable{
+public class TileComponent extends HBox{
 
     private TileState tileState;
     private final GameHandler gameHandler;
@@ -75,13 +75,11 @@ public class TileComponent extends HBox implements Draggable{
     }
 
 
-    @Override
     public void makeDraggable() {
         this.setOnMousePressed(this::onMousePressed);
         this.setOnMouseDragged(this::onMouseDragged);
     }
 
-    @Override
     public void removeDraggable() {
         this.setOnMousePressed(null);
         this.setOnMouseDragged(null);

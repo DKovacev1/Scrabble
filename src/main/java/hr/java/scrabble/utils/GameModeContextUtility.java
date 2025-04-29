@@ -61,6 +61,7 @@ public class GameModeContextUtility {
         gameHandler.putTilesFromPlayerStateToGrid();
         gameHandler.putTilesFromCenterGameStateToGrid();
         gameHandler.getPlayerActionsHandler().setSingleplayerActions();
+        gameHandler.getSideBarHandler().addTileBagComponent();
 
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(5), keyFrame -> {
             Platform.runLater(new LastWordReader(gameHandler));
@@ -75,7 +76,7 @@ public class GameModeContextUtility {
             gameHandler.getPlayerActionsHandler().setInLobbyMultiplayerActions();
         }
         else
-            DialogUtility.showDialog("Connection error", "You are already connected!");
+            BasicDialogUtility.showDialog("Connection error", "You are already connected!");
     }
 
     private static void setupHostAndClient(GameHandler gameHandler) {
@@ -89,7 +90,7 @@ public class GameModeContextUtility {
         while (!gameHandler.getServer().getServerRunning().get() && count < 10) {
             // Wait for the server to start
             try {
-                System.out.println("PETLJA");
+                //System.out.println("PETLJA");
                 Thread.sleep(100); // Wait for 100 milliseconds before checking again
                 count++;
             } catch (InterruptedException e) {
@@ -97,7 +98,7 @@ public class GameModeContextUtility {
             }
         }
         if(count == 10){//10 pokusaja
-            Platform.runLater(() -> DialogUtility.showDialog("Server error", "Host is already assigned!"));
+            Platform.runLater(() -> BasicDialogUtility.showDialog("Server error", "Host is already assigned!"));
             gameHandler.setServer(null);
         }
 
@@ -111,7 +112,7 @@ public class GameModeContextUtility {
     }
 
     private static void clearStatesAndScreen(GameHandler gameHandler){
-        gameHandler.getChatHandler().removeChatComponent();
+        gameHandler.getSideBarHandler().removeSideBarComponent();
         if(gameHandler.getServer() != null)
             gameHandler.getServer().stop();
 
@@ -122,6 +123,7 @@ public class GameModeContextUtility {
         gameHandler.setServer(null);
 
         gameHandler.getPlayerState().reset();
+        gameHandler.getGaPlayerState().reset();
         gameHandler.getCenterBoardState().reset();
 
         gameHandler.putTilesFromPlayerStateToGrid();
@@ -143,6 +145,7 @@ public class GameModeContextUtility {
         gameHandler.putTilesFromPlayerStateToGrid();
         gameHandler.putTilesFromCenterGameStateToGrid();
         gameHandler.getPlayerActionsHandler().setSingleplayerActions();
+        gameHandler.getSideBarHandler().addTileBagComponent();
     }
 
 }

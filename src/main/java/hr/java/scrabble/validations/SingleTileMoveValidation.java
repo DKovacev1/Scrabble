@@ -4,17 +4,19 @@ import hr.java.scrabble.game.GameConstants;
 import hr.java.scrabble.game.WordAndScore;
 import hr.java.scrabble.states.TileState;
 import hr.java.scrabble.utils.TilesUtility;
+import lombok.RequiredArgsConstructor;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 public class SingleTileMoveValidation {
 
-    private SingleTileMoveValidation(){}
+    private final WordValidation wordValidation;
 
     //treba gledati samo cijeli redak i stupac unutar kojih se nalazi ta nova plocica
     //malo drugacija pravila u odnosu na to kada su dvije ili vise plocice pa tako cine rijec
-    public static boolean validateSingleTileMoveAndAssignWordScore(List<TileState> tilesOnBoard, TileState newTileOnBoard, WordAndScore wordAndScore) {
+    public boolean validateSingleTileMoveAndAssignWordScore(List<TileState> tilesOnBoard, TileState newTileOnBoard, WordAndScore wordAndScore) {
         boolean rowWordFlag = false;
         boolean colWordFlag = false;
 
@@ -43,8 +45,8 @@ public class SingleTileMoveValidation {
                     .map(TileState::getLetter)
                     .collect(Collectors.joining());
 
-            System.out.println("rowWord: " + rowWord);
-            if (!WordValidating.isWordValid(rowWord))
+            //System.out.println("rowWord: " + rowWord);
+            if (!wordValidation.isWordValid(rowWord) && rowWord.length() > 1)
                 return false;//rijec se ne nalazi u rijecniku
 
             wordAndScore.setWord("Row word: " + rowWord + "\n");
@@ -73,8 +75,8 @@ public class SingleTileMoveValidation {
                     .map(TileState::getLetter)
                     .collect(Collectors.joining());
 
-            System.out.println("columnWord: " + columnWord);
-            if (!WordValidating.isWordValid(columnWord))
+            //System.out.println("columnWord: " + columnWord);
+            if (!wordValidation.isWordValid(columnWord) && columnWord.length() > 1)
                 return false;//rijec se ne nalazi u rijecniku
 
             wordAndScore.setWord( wordAndScore.getWord() + "Column word: " + columnWord + "\n");
