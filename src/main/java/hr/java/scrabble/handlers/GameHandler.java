@@ -155,6 +155,8 @@ public class GameHandler {
         }
 
         sideBarHandler.addTileBagComponent();
+        if(GameModeContext.MULTIPLAYER_CLIENT.equals(gameModeContext) || gameModeContext.equals(GameModeContext.MULTIPLAYER_HOST_AND_CLIENT))
+            sideBarHandler.addChatComponent();
     }
 
     public boolean tileExistsInWholeGrid(Integer row, Integer col) {
@@ -182,6 +184,8 @@ public class GameHandler {
             playerState.handlePlayerTilesSwap(tilesToSwap, tileBagState);
             putTilesFromPlayerStateToGrid();
             sideBarHandler.addTileBagComponent();
+            if(GameModeContext.MULTIPLAYER_CLIENT.equals(gameModeContext) || gameModeContext.equals(GameModeContext.MULTIPLAYER_HOST_AND_CLIENT))
+                sideBarHandler.addChatComponent();
         }
     }
 
