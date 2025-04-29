@@ -49,6 +49,7 @@ public class SideBarHandler {
 
         Text text = new Text(tileBagText + groupedLetters);
         text.setFont(new Font(15));
+        text.setWrappingWidth(500);
 
         sideBarComponent.getChildren().add(text);
     }
